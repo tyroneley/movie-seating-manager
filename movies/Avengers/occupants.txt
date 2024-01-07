@@ -1,8 +1,10 @@
-3 5 Pranav
-3 6 Pranav
-4 3 Tyrone
-4 4 Tyrone
-4 5 Tyrone
-4 6 Abyan
-5 5 Pranav
-5 6 Pranav
+5 3 Tyrone Vargas
+5 4 Tyrone Vargas
+5 5 Tyrone Vargas
+5 6 Tyrone Vargas
+5 7 Tyrone Vargas
+6 3 Tyrone Vargas
+6 4 Tyrone Vargas
+6 5 Tyrone Vargas
+6 6 Tyrone Vargas
+6 7 Tyrone Vargas

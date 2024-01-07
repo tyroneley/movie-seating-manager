@@ -2,21 +2,19 @@ from modules.Seat import Seat
 
 class SeatsManager:
     def __init__(self, rows, cols):
-        # init the seating arrangement with seat objects
         self.rows = rows
         self.cols = cols
         self.middle_rows = self.calculate_middle_rows()
         self.middle_cols = self.calculate_middle_cols()
         self.last_rows = self.calculate_last_rows()
-        self.seating_grid = [[Seat(row, col, self.calculate_price(row, col)) for col in range(cols)] for row in range(rows)]
+        self.seating_grid = [[Seat(row, col, self.calculate_price(row, col)) for col in range(cols)] for row in range(rows)] # init the seating arrangement with seat objects
         self.selected = []
 
     def select_seat(self, seat):
         self.selected.append(seat)
 
-    def unselect_seat(self, seat):
-        index = self.selected.index(seat)
-        self.selected.pop(index)
+    def unselect_seat(self):
+        return self.selected.pop()
 
     def get_selected_seats(self):
         return self.selected

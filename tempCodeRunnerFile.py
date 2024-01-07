@@ -1,1 +1,1 @@
-selected_seats
+Book Seat
