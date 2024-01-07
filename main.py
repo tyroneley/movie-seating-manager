@@ -7,12 +7,15 @@ from modules.PopupInput import PopupInput
 from modules.MovieDialog import MovieDialog
 
 # functions
+menu_buttons = []
+seating_buttons = []
+
 def getRowsAndCols(file_name):
     with open(file_name, 'r') as file:
         content = file.read()
-    lines = content.split('\n') 
+    lines = content.split('\n')
     rows = len(lines)
-    cols = len(lines[0].strip()) # use strip as the each seat (represented by Os) are concatenated in one line in the file
+    cols = len(lines[0].strip()) # use strip as twhehe each seat (represented by Os) are concatenated in one line in the file
     return rows, cols
 
 def create_new_movie():
@@ -55,7 +58,6 @@ def draw_menu(seating_buttons):
     movies_directory = "movies"
     movie_folders = [folder for folder in os.listdir(movies_directory) if os.path.isdir(os.path.join(movies_directory, folder))]
 
-    menu_buttons = [] # store the buttons to delete when deleting canvas
     for index, movie_folder in enumerate(movie_folders):
         button_text = f"Movie {index + 1}: {movie_folder}"
         button = tk.Button(canvas, text=button_text, width=20, height=2, command=lambda folder=movie_folder, menu_buttons=menu_buttons: draw_seating(folder, menu_buttons))
@@ -89,7 +91,6 @@ def draw_seating(folder, menu_buttons):
 
     total_seats_width = cols * seat_width + (cols - 1) * gap
     start_x = (screen_width - total_seats_width) // 2
-    seating_buttons = []
 
     for row in range(rows):
         for col in range(cols):
@@ -106,33 +107,47 @@ def draw_seating(folder, menu_buttons):
 
             # create button instead of rectangle
             button = tk.Button(canvas, text=f"{row + 1}-{col + 1}", width=2, height=1)
-            button.configure(background=color, activebackground=activeColor, command=lambda seat=seat, button=button, seats=seats, folder=folder: seat_click(button, seat, seats, folder))
+            button.configure(background=color, activebackground=activeColor, command=lambda seat=seat, button=button, seats=seats, folder=folder: seat_click(button, seat, seats))
             button.place(x=x, y=y, width=seat_width, height=seat_height)
             seating_buttons.append(button)
-
+    
     back_button = tk.Button(canvas, text="Back", command=lambda seating_buttons=seating_buttons: draw_menu(seating_buttons))
     back_button.configure(background="gray")
     back_button.place(x=450, y=350)
+
+    book_button = tk.Button(canvas, text="Book", command=lambda seats=seats, folder=folder, menu_buttons=menu_buttons: book_seat(seats, folder, menu_buttons))
+    book_button.configure(background="gray")
+    book_button.place(x=400, y=350)
+
     seating_buttons.append(back_button)
+    seating_buttons.append(book_button)
     return seating_buttons
 
-def seat_click(button, seat, seats, folder):
+def seat_click(button, seat, seats):
+    selected_seats = seats.get_selected_seats()
+    if seat in selected_seats:
+        seats.unselect_seat(seat)
+        button.configure(background="gray")
+        return
+
     if seat.is_taken:
         messagebox.showinfo("Seat Taken", f"This seat has already been booked by {seat.occupant_name}!")
     else:
-        # create a pop-up window for the message box
-        result_dialog = Popup(window, "Book Seat", f"Book seat {seat.row + 1}-{seat.col + 1}?\nPrice: ${seat.price}")
-        if result_dialog.result:
-            book_seat(button, seat, seats, folder)
-            #print(f"Seat {seat.row + 1}-{seat.col + 1} booked.")
+        seats.select_seat(seat)
+        button.configure(background="yellow")
+        
 
-def book_seat(button, seat, seats, folder):
-    name_dialog = PopupInput(window, "Book Seat", "Enter Name:")
-    
-    if name_dialog.result:
-        seat.book(name_dialog.result)
-        seats.write_to_file(f"movies/{folder}/occupants.txt")
-        button.configure(background="red", activebackground="dark red")
+def book_seat(seats, folder, menu_buttons):
+    selected_seats = seats.get_selected_seats()
+
+    if len(selected_seats) > 0:
+        name_dialog = PopupInput(window, "Book Seat", "Enter Name:")
+        if name_dialog.result:
+            for seat in selected_seats:
+                seats.unselect_seat(seat)      
+                seat.book(name_dialog.result)
+            seats.write_to_file(f"movies/{folder}/occupants.txt")
+            draw_seating(folder, menu_buttons)
         
 def on_exit():
     window.destroy()

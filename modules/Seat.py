@@ -1,4 +1,5 @@
 class Seat:
+    # instantiate a new seat object with occupant info
     def __init__(self, row, col, price):
         self.row = row
         self.col = col
