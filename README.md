@@ -5,7 +5,9 @@
 
 ## How To Run
 Run the main.py file and the program will open in a new window.
-![Gameplay](https://i.imgur.com/fqeAhbo.png)
+
+## Usage Example
+![Booking seats](https://i.imgur.com/fqeAhbo.png)
 
 ## Links to Submit
 - [Final Report](https://docs.google.com/document/d/1HRKghm29N21bAS9KyYq0vm46J5AdCKuGgsSf-3PTRW8/edit?usp=sharing)
